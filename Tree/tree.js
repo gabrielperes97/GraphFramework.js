@@ -8,6 +8,14 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 };
 
+function logger(text) {
+    $("#logger-text").append(text + "<br/>");
+}
+
+function clearLogger() {
+    $("#logger-text").html("");
+}
+
 (function($){
 
     var Renderer = function(canvas){
@@ -170,11 +178,14 @@ function sleep(ms) {
 
 
         $("#gerar").click(function () {
+
+            clearLogger();
+
             sys.eachNode(function (v) {
                 sys.pruneNode(v);
             });
 
-            var text = $("#text").val();
+            var text = $("#editor-text").val();
 
             var graph = new Graph();
 
@@ -219,7 +230,8 @@ function sleep(ms) {
                         }
                         else
                         {
-                            //lança um erro
+                            logger("Start duplicado");
+                            return;
                         }
                         break;
                     case "dfs":
@@ -230,11 +242,25 @@ function sleep(ms) {
                         }
                         else
                         {
-                            //lança um erro
+                            logger("Algoritmo de busca já definido");
+                            return;
+                        }
+                        break;
+                    case "bfs":
+                        if (searchAlg === null)
+                        {
+                            searchAlg = BFS;
+                            target = argumento;
+                        }
+                        else
+                        {
+                            logger("Algoritmo de busca já definido");
+                            return;
                         }
                         break;
                     default:
-                        //errrooooo
+                        logger("Função inválida");
+                        return;
                         break;
                 }
             }
@@ -248,19 +274,15 @@ function sleep(ms) {
                     n = sys.getNode(node.data);
                     n.data["color"] = "yellow";
                     console.log("Visited: "+node.rotulo);
-                    //sys.renderer.redraw();
-                    //var now = new Date().getTime();
-                    //while(new Date().getTime() < now + 1000){ /* do nothing */ }
-                    //pinta de uma cor
+                    logger("Visited: "+node.rotulo);
+
                 };
                 search.onProcessNode = function (node) {
                     //pinta de outra cor
                     n = sys.getNode(node.rotulo);
                     n.data["color"] = "grey";
                     console.log("Processed: "+node.data);
-                    //sys.renderer.redraw();
-                    //var now = new Date().getTime();
-                    //while(new Date().getTime() < now + 1000){ /* do nothing */ }
+                    logger("Processed: "+node.rotulo);
                 };
                 search.search();
             }

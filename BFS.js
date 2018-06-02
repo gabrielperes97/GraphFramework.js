@@ -1,9 +1,9 @@
-class DFS extends SearchAlgorithm {
+class BFS extends SearchAlgorithm {
 
 
     constructor(graph, targetFunction){
         super(graph, targetFunction);
-        this.stack = [graph.initialNode];
+        this.queue = [graph.initialNode];
         this.onVisitNode = null;
         this.onProcessNode = null;
         this.started = false;
@@ -13,14 +13,14 @@ class DFS extends SearchAlgorithm {
         if (!this.started)
         {
             if (this.onVisitNode)
-                this.onVisitNode(this.stack[0]);
-            this.stack[0].estado = Node.ESTADO.VISITADO;
+                this.onVisitNode(this.queue[0]);
+            this.queue[0].estado = Node.ESTADO.VISITADO;
             this.started = true;
         }
 
-        while(this.stack.length > 0) {
-            //Pega o topo da pilha
-            var v = this.stack[this.stack.length-1];
+        while(this.queue.length > 0) {
+            //Pega o inicio da fila
+            var v = this.queue[0];
 
 
             var unvisitedNeighbor = v.OneUnvisitedNeighbor();
@@ -32,17 +32,17 @@ class DFS extends SearchAlgorithm {
                 if (this.onProcessNode)
                     this.onProcessNode(v);
                 v.estado = Node.ESTADO.PROCESSADO;
-                this.stack.pop();
+                this.queue.shift();
                 if (this.targetFunction(v))
                     return v;
             }
-            //Se for um visinho não visitado, marca como visitado e bota na pilha
+            //Se for um visinho não visitado, marca como visitado e bota na fila
             else
             {
                 if (this.onVisitNode)
                     this.onVisitNode(unvisitedNeighbor.destino);
                 unvisitedNeighbor.destino.estado = Node.ESTADO.VISITADO;
-                this.stack.push(unvisitedNeighbor.destino);
+                this.queue.push(unvisitedNeighbor.destino);
             }
         }
         //Se não encontrou o que procura, então retorna um null

@@ -47,6 +47,7 @@
     </style>
     <script type="text/javascript" src="../Graph.js"></script>
     <script type="text/javascript" src="../DFS.js"></script>
+    <script type="text/javascript" src="../BFS.js"></script>
     <script type="text/javascript" src="NQueens.js"></script>
     <script>
         var n;
@@ -97,6 +98,13 @@
             dfs.onProcessNode = function (node) {
                 console.log("Processed: "+node.rotulo);
             };
+            bfs = new BFS(nqueens, nqueens.targetFunction);
+            bfs.onVisitNode = function (node) {
+                console.log("Visited: "+node.rotulo);
+            };
+            bfs.onProcessNode = function (node) {
+                console.log("Processed: "+node.rotulo);
+            };
         }
 
         function tempoDecorrido(context,funcao) {
@@ -127,6 +135,19 @@
 
                 printTabuleiro(vertice.data);
                 printTime("Execução por DFS: "+tempo)
+            }
+        }
+
+        function runBFS()
+        {
+            [tempo, vertice] = tempoDecorrido(bfs, bfs.search)
+            if (vertice == null)
+                alert("Não existe mais opções");
+            else
+            {
+
+                printTabuleiro(vertice.data);
+                printTime("Execução por BFS: "+tempo)
             }
         }
     </script>

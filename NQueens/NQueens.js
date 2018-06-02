@@ -71,7 +71,7 @@ class Tabuleiro {
         }
     }
 
-    static canPut(tabuleiro, lin, col) {
+    static DontHasConflit(tabuleiro, lin, col) {
         var x=parseInt(lin);
         var y=parseInt(col);
         var i;
@@ -177,7 +177,7 @@ class Tabuleiro {
 
     itsRight() {
         for (var i=0; i<this.queenList.length; i++) {
-            if (!Tabuleiro.canPut(this, this.queenList[i][0], this.queenList[i][1]))
+            if (!Tabuleiro.DontHasConflit(this, this.queenList[i][0], this.queenList[i][1]))
                 return false;
         }
         return true;
