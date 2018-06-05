@@ -16,6 +16,8 @@ class DFS extends SearchAlgorithm {
                 this.onVisitNode(this.stack[0]);
             this.stack[0].estado = Node.ESTADO.VISITADO;
             this.started = true;
+            if (this.targetFunction(this.stack[0]))
+                return this.stack[0];
         }
 
         while(this.stack.length > 0) {
@@ -33,8 +35,6 @@ class DFS extends SearchAlgorithm {
                     this.onProcessNode(v);
                 v.estado = Node.ESTADO.PROCESSADO;
                 this.stack.pop();
-                if (this.targetFunction(v))
-                    return v;
             }
             //Se for um visinho não visitado, marca como visitado e bota na pilha
             else
@@ -43,6 +43,8 @@ class DFS extends SearchAlgorithm {
                     this.onVisitNode(unvisitedNeighbor.destino);
                 unvisitedNeighbor.destino.estado = Node.ESTADO.VISITADO;
                 this.stack.push(unvisitedNeighbor.destino);
+                if (this.targetFunction(unvisitedNeighbor.destino))
+                    return unvisitedNeighbor.destino;
             }
         }
         //Se não encontrou o que procura, então retorna um null

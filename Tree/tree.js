@@ -284,7 +284,7 @@ function clearLogger() {
                     console.log("Processed: "+node.data);
                     logger("Processed: "+node.rotulo);
                 };
-                search.search();
+                logger("Result: " + search.search().rotulo);
             }
         });
 

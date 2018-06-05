@@ -16,6 +16,8 @@ class BFS extends SearchAlgorithm {
                 this.onVisitNode(this.queue[0]);
             this.queue[0].estado = Node.ESTADO.VISITADO;
             this.started = true;
+            if (this.targetFunction(this.queue[0]))
+                return this.queue[0];
         }
 
         while(this.queue.length > 0) {
@@ -33,8 +35,6 @@ class BFS extends SearchAlgorithm {
                     this.onProcessNode(v);
                 v.estado = Node.ESTADO.PROCESSADO;
                 this.queue.shift();
-                if (this.targetFunction(v))
-                    return v;
             }
             //Se for um visinho não visitado, marca como visitado e bota na fila
             else
@@ -43,6 +43,8 @@ class BFS extends SearchAlgorithm {
                     this.onVisitNode(unvisitedNeighbor.destino);
                 unvisitedNeighbor.destino.estado = Node.ESTADO.VISITADO;
                 this.queue.push(unvisitedNeighbor.destino);
+                if (this.targetFunction(unvisitedNeighbor.destino))
+                    return unvisitedNeighbor.destino;
             }
         }
         //Se não encontrou o que procura, então retorna um null
