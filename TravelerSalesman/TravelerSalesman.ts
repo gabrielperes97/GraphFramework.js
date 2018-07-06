@@ -1,13 +1,3 @@
-//
-//  main.js
-//
-//  A project template for using arbor.js
-//
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-};
-
 function logger(text) {
     $("#logger-text").append(text + "<br/>");
 }
@@ -66,12 +56,23 @@ function clearLogger() {
                     // pt2:  {x:#, y:#}  target position in screen coords
 
                     // draw a line from pt1 to pt2
-                    ctx.strokeStyle = "rgba(0,0,0, .333)"
-                    ctx.lineWidth = 1
-                    ctx.beginPath()
-                    ctx.moveTo(pt1.x, pt1.y)
-                    ctx.lineTo(pt2.x, pt2.y)
-                    ctx.stroke()
+                    ctx.strokeStyle = "rgba(0,0,0, .333)";
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(pt1.x, pt1.y);
+                    ctx.lineTo(pt2.x, pt2.y);
+                    ctx.stroke();
+
+                    if (edge.data.label){
+                        ctx.font = "20px Helvetica";
+                        ctx.textAlign = "center";
+                        ctx.edge = "black";
+                        if (edge.data.color)
+                            ctx.fillStyle = edge.data.color;
+                        else
+                            ctx.fillStyle = '#000';
+                        ctx.fillText(edge.data.label||"", (pt1.x + pt2.x)/2, (pt1.y+pt2.y)/2);
+                    }
                 })
 
                 particleSystem.eachNode(function(node, pt){
@@ -218,7 +219,7 @@ function clearLogger() {
                     graph.addBidiretionalEdge(nodes[matches[1]], nodes[matches[5]], 0, "0");
                 }
             }
-            
+
 
             //Encontra as funções
             regex = new RegExp(/([A-Za-z]+)\(([A-Za-z0-9]+)\)/g);
@@ -303,4 +304,3 @@ function clearLogger() {
 
 
 })(this.jQuery);
-
