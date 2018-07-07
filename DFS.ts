@@ -1,4 +1,4 @@
-import {Graph, SearchAlgorithm, Node} from "./Graph";
+//import {Graph, SearchAlgorithm, Node} from "./Graph";
 
 class DFS extends SearchAlgorithm {
 
@@ -7,7 +7,7 @@ class DFS extends SearchAlgorithm {
     onProcessNode : (Node) => void;
     started : boolean;
 
-    constructor(graph: Graph, targetFunction){
+    constructor(graph: Graph, targetFunction: (Node) => boolean){
         super(graph, targetFunction);
         this.stack = [graph.initialNode];
         this.onVisitNode = null;
@@ -28,10 +28,10 @@ class DFS extends SearchAlgorithm {
 
         while(this.stack.length > 0) {
             //Pega o topo da pilha
-            var v = this.stack[this.stack.length-1];
+            let v = this.stack[this.stack.length-1];
 
 
-            var unvisitedNeighbor = v.OneUnvisitedNeighbor();
+            let unvisitedNeighbor = v.OneUnvisitedNeighbor();
 
             //Se não existirem visinhos não visitados
             if (unvisitedNeighbor == null)

@@ -1,26 +1,30 @@
 
 //Grafo
-export class Graph {
+class Graph {
 
-    public initialNode : Node;
-    nodes : Node[];
+    initialNode : Node;
+    nodes : { [id:string] : any};
     edges : Edge[];
+
+
     constructor()
     {
         this.initialNode = null;
-        this.nodes = [];
+        this.nodes = {};
         this.edges = [];
     }
 
-    addBidiretionalEdge(from, to, weight=0, name="")
+    addBidiretionalEdge(from: Node, to: Node, weight: number =0, name: string ="")
     {
-        from.addNeighbor(to, weight, name);
-        to.addNeighbor(from, weight, name);
+        this.addEdge(from, to, weight, name);
+        this.addEdge(to, from, weight, name);
     }
 
-    addNode(node)
+    addEdge(from: Node, to: Node, weight: number, name: string = "")
     {
-        this.nodes.push(node);
+        if (!this.nodes[from.rotulo])
+            this.nodes[from.rotulo] = from;
+        from.addNeighbor(to, weight, name);
     }
 }
 
@@ -31,7 +35,7 @@ enum EDGE_ESTADO {
     NAO_VISITADO
 }
 
-export class Edge {
+class Edge {
 
     static readonly ESTADO = EDGE_ESTADO;
 
@@ -59,7 +63,7 @@ enum NODE_ESTADO {
     PROCESSADO
 }
 
-export class Node {
+class Node {
 
     static readonly  ESTADO = NODE_ESTADO;
 
@@ -98,20 +102,20 @@ export class Node {
         });
     }
 
-    addNeighbor(vertex, weight=0, name="") {
-        var neighbor = new Edge(this, vertex, weight, name);
+    addNeighbor(node: Node, weight: number =0, name: string ="") {
+        var neighbor = new Edge(this, node, weight, name);
         this.neighbors.push(neighbor);
         return neighbor;
     }
 }
 
 
-export class SearchAlgorithm {
+class SearchAlgorithm {
 
     graph : Graph;
-    targetFunction : any; //todo passar pra função
+    targetFunction : (Node) => boolean;
 
-    constructor(graph, targetFunction){
+    constructor(graph: Graph, targetFunction: (Node) => boolean){
         this.graph = graph;
         this.targetFunction = targetFunction;
     }

@@ -1,4 +1,4 @@
-import {Graph, SearchAlgorithm, Node} from "./Graph";
+//import {Graph, SearchAlgorithm, Node} from "./Graph";
 
 class BFS extends SearchAlgorithm {
 
@@ -7,8 +7,7 @@ class BFS extends SearchAlgorithm {
     onProcessNode : (Node) => void;
     started : boolean;
 
-
-    constructor(graph: Graph, targetFunction){
+    constructor(graph: Graph, targetFunction: (Node) => boolean){
         super(graph, targetFunction);
         this.queue = [graph.initialNode];
         this.onVisitNode = null;
@@ -29,10 +28,10 @@ class BFS extends SearchAlgorithm {
 
         while(this.queue.length > 0) {
             //Pega o inicio da fila
-            var v = this.queue[0];
+            let v = this.queue[0];
 
 
-            var unvisitedNeighbor = v.OneUnvisitedNeighbor();
+            let unvisitedNeighbor = v.OneUnvisitedNeighbor();
 
             //Se não existirem visinhos não visitados
             if (unvisitedNeighbor == null)
