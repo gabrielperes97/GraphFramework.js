@@ -3,7 +3,7 @@
 class DFS extends SearchAlgorithm {
 
     stack : Node[];
-    onVisitNode : (Node) => void;
+    onVisitNode : (Node, Edge) => void;
     onProcessNode : (Node) => void;
     started : boolean;
 
@@ -19,7 +19,7 @@ class DFS extends SearchAlgorithm {
         if (!this.started)
         {
             if (this.onVisitNode)
-                this.onVisitNode(this.stack[0]);
+                this.onVisitNode(this.stack[0], null);
             this.stack[0].estado = Node.ESTADO.VISITADO;
             this.started = true;
             if (this.targetFunction(this.stack[0]))
@@ -46,7 +46,7 @@ class DFS extends SearchAlgorithm {
             else
             {
                 if (this.onVisitNode)
-                    this.onVisitNode(unvisitedNeighbor.destino);
+                    this.onVisitNode(unvisitedNeighbor.destino, unvisitedNeighbor);
                 unvisitedNeighbor.destino.estado = Node.ESTADO.VISITADO;
                 this.stack.push(unvisitedNeighbor.destino);
                 if (this.targetFunction(unvisitedNeighbor.destino))

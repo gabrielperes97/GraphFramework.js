@@ -177,7 +177,25 @@ function error(text) {
 
         };
         return that
-    }
+    };
+
+    var examples = {'Tree': "1 -- 2\n1 -- 3\n2 -- 4\n2 -- 5\n4 -- 6\nstart(1)\nDFS(6)",
+        'Traveler Salesman' : "1 (2) -- 2\n2 (4)--3\n3(3)--5\n5(3)--4\n4(3)--1\n1(6)--5\n5(3)--4\n3(7)--4\nstart(1)\nannealing()",
+
+        'Traveler Salesman2': "1 (2) -- 2\n" +
+        "2 (5)--3\n" +
+        "3(6)--4\n" +
+        "4(2)--5\n" +
+        "5(5)--1\n" +
+        "1(7)--3\n" +
+        "1(1)--4\n" +
+        "2(3)--4\n" +
+        "2(4)--5\n" +
+        "5(8)--3\n" +
+        "\n" +
+        "start(1)\n" +
+        "annealing()"
+    };
 
     $(document).ready(function(){
         var sys = arbor.ParticleSystem(1000, 600, 0.5);// create the system with sensible repulsion/stiffness/friction
@@ -191,6 +209,14 @@ function error(text) {
         sys.addEdge('a','e');
         sys.addNode('f', {alone:true, mass:.25});
 
+        for (var key in examples)
+        {
+            $("#cbExamples").append("<option value='"+key+"'>"+key+"</option>");
+        }
+
+        $("#cbExamples").on('change', function () {
+            $("#editor-text").html(examples[this.value]);
+        });
 
         $("#gerar").click(function () {
 
@@ -236,10 +262,12 @@ function error(text) {
             
 
             //Encontra as funções
-            regex = new RegExp(/([A-Za-z]+)\(([A-Za-z0-9]+)\)/g);
+            regex = new RegExp(/([A-Za-z]+)\(([A-Za-z0-9]*)\)/g);
             var startNode = null;
             var searchAlg = null;
             var target = null;
+            var simAnnealing = false;
+            var dijkstra = false;
             while ((matches = regex.exec(text)) != null) {
                 var funcao = matches[1].toLowerCase();
                 var argumento = matches[2];
@@ -283,6 +311,29 @@ function error(text) {
                             return;
                         }
                         break;
+                    case "annealing":
+                        if (!searchAlg)
+                        {
+                            simAnnealing = true;
+                        }
+                        else
+                        {
+                            logger("Algoritmo de busca já definido");
+                            return;
+                        }
+                        break;
+                    case "dijkstra":
+                        if (!searchAlg && !simAnnealing)
+                        {
+                            dijkstra = true;
+                            target = argumento;
+                        }
+                        else
+                        {
+                            logger("Algoritmo já definido");
+                            return;
+                        }
+                        break;
                     default:
                         logger("Função inválida");
                         return;
@@ -290,7 +341,7 @@ function error(text) {
                 }
             }
 
-            if (startNode != null && searchAlg != null)
+            if (startNode && searchAlg)
             {
                 var search = new searchAlg(graph, function (node) {
                     return node.data === target;
@@ -298,7 +349,6 @@ function error(text) {
                 search.onVisitNode = function (node) {
                     n = sys.getNode(node.data);
                     n.data["color"] = "yellow";
-                    console.log("Visited: "+node.rotulo);
                     logger("Visited: "+node.rotulo);
 
                 };
@@ -306,10 +356,24 @@ function error(text) {
                     //pinta de outra cor
                     n = sys.getNode(node.rotulo);
                     n.data["color"] = "grey";
-                    console.log("Processed: "+node.data);
                     logger("Processed: "+node.rotulo);
                 };
-                logger("Result: " + search.search().rotulo);
+                var result = search.search();
+                if (result)
+                    logger("Result: " + result.rotulo);
+                else
+                    logger("Result not found. 404");
+            }
+            else if (startNode && simAnnealing)
+            {
+                var exec = new SimulatedAnnealing(graph);
+                var tour = exec.execute();
+                logger("O melhor caminho é "+tour.toString() + " com custo "+tour.distance);
+            }
+            else if (startNode && dijkstra && argumento)
+            {
+                var tour = graph.initialNode.pathTo(graph.nodes[argumento], graph);
+                logger("O menor caminho de "+graph.initialNode.rotulo + " até "+argumento+ " é "+tour.toString());
             }
         });
 
